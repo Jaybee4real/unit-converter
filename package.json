@@ -1,0 +1,27 @@
+{
+  "name": "@jaybee4real/unit-converter",
+  "version": "1.0.5",
+  "description": "The package converts units from the desired type to the specified type.",
+  "keywords": [
+    "units",
+    "conversion",
+    "convert-units",
+    "es6-modules",
+    "javascript",
+    "measurement-units",
+    "unit-of-measure",
+    "convert-between-measures"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaybee4real/unit-converter.git"
+  },
+  "author": "Okoroji Faith Joseph <okorojijaybee1@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/jaybee4real/unit-converter"
+  },
+  "homepage": "https://github.com/jaybee4real/unit-converter#readme",
+  "main": "./index.js"
+}
