@@ -1,7 +1,11 @@
 {
   "name": "@jaybee4real/unit-converter",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "description": "The package converts units from the desired type to the specified type.",
+  "scripts": {
+    "test": "node example.js",
+    "publish": "npm publish --access public"
+  },
   "keywords": [
     "units",
     "conversion",
@@ -23,5 +27,5 @@
     "url": "https://github.com/jaybee4real/unit-converter"
   },
   "homepage": "https://github.com/jaybee4real/unit-converter#readme",
-  "main": "./index.js"
+  "main": "./index"
 }

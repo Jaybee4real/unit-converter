@@ -1,6 +1,9 @@
 import { convertWeight, convertDistance } from './index.mjs'
 
 
+// TODO: write tests using jest
+// TODO: add more accepted units
+
 // weight conversions
 console.log(convertWeight(1, "kg", "pounds")) // 2.20462
 console.log(convertWeight(1, "kg", "ounces")) // 35.274
@@ -12,3 +15,13 @@ console.log(convertDistance(1, "km", "miles")) // 0.621371
 console.log(convertDistance(1, "km", "yards")) // 1.09361
 console.log(convertDistance(1, "km", "meters")) // 1000
 console.log(convertDistance(1, "km", "kilometers")) // 1
+
+// convert to and from feetInches (5' 3")
+
+console.log(convertDistance(100, "cm", "ftIn", "true")) // 3' 3"
+console.log(convertDistance(`3' 3"`, "ftIn", "cm", "true")) // 100
+console.log(convertDistance(`3' 3"`, "ftIn", "in", "true")) // 100
+
+
+// use the shouldRound boolean as last argument
+console.log(convertWeight(1, "kg", "pounds", true)) // 2 instead of 2.20462

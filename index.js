@@ -31,6 +31,9 @@ const distanceAliases = {
     '<mi>|<mile>|<miles>': {
         name: 'miles',
     },
+    '<feetIn>|<ftIn>|<feetInches>|<feet-inches>': {
+        name: 'feet-inches',
+    }
 };
 
 const weightAliases = {
@@ -48,7 +51,7 @@ const weightAliases = {
     },
     '<g>|<gram>|<grams>': {
         name: 'grams',
-    }
+    },
 }
 
 function checkAliases(unitName, aliasType) {
@@ -61,7 +64,10 @@ function checkAliases(unitName, aliasType) {
     return unitActualName;
 }
 
-function convertLowerValue(value, unit) {
+
+
+// computation on first argument
+function convertLowerValue(value, unit, shouldRound) {
     switch (unit) {
         case 'millimetres':
             return value * 0.001;
@@ -77,12 +83,19 @@ function convertLowerValue(value, unit) {
             return value * (1 / 1.093613);
         case 'miles':
             return value * (1 / 0.000621371);
+        case 'feet-inches':
+            let feet = Number(value.split(`'`)[0])
+            let inches = Number(value.split(`"`)[1])
+            let correctInches = (feet * 12) + inches
+            let correctValue = correctInches * (1 / 39.370079)
+            return shouldRound ? Math.round(correctValue) : correctValue
         default:
             return value;
     }
 }
 
-function convertHigherValue(value, unit) {
+// computation on second argument
+function convertHigherValue(value, unit, shouldRound) {
     switch (unit) {
         case 'millimetres':
             return value * 1000;
@@ -98,121 +111,140 @@ function convertHigherValue(value, unit) {
             return value * 1.093613;
         case 'miles':
             return value * 0.000621371;
+        case 'feet-inches':
+            let inches = ((value * 0.393700787) * 100);
+            let feet = Math.floor(inches / 12);
+            inches %= 12;
+            return `${feet}' ${shouldRound ? Math.round(inches) : inches}"`
         default:
             return value;
     }
 }
 
 
-export function convertDistance(value, fromUnit, toUnit) {
-    const inputValue = parseFloat(value);
+
+// for values pertaining to height, distance, length
+export function convertDistance(value, fromUnit, toUnit, shouldRound) {
+    const inputValue = value.toString().includes(`"`) ? value : parseFloat(value);
     const from = checkAliases(fromUnit, distanceAliases);
     const to = checkAliases(toUnit, distanceAliases);
 
-    if (!inputValue) {
-        console.log('Missing value to convert!')
+    if (!inputValue && inputValue !== 0) {
+        console.error('Missing value to convert!')
         throw new Error('Missing value to convert!')
     };
 
     if (!from) {
-        console.log('Unit/Alias either to convert from not valid type or not currently supported!')
+        console.error('Unit/Alias either to convert from not valid type or not currently supported!')
         throw new Error('Unit/Alias to convert from either not valid type, or not currently supported!')
     };
     if (!to) {
-        console.log('Unit/Alias either to convert not to valid type or not currently supported!')
+        console.error('Unit/Alias either to convert not to valid type or not currently supported!')
         throw new Error('Unit/Alias to convert to either not valid type, Or not currently supported!')
     };
 
-    return convertHigherValue(convertLowerValue(value, from), to)
+    let computedValue = convertHigherValue(convertLowerValue(value, from, shouldRound), to, shouldRound)
+    if (shouldRound && from !== "feet-inches" && to !== "feet-inches") {
+        // do not round feet inches because it returns a string instead of a number
+        return Math.round(computedValue)
+    } else return computedValue
 }
 
 
-export function convertWeight(value, fromUnit, toUnit) {
+
+// for values pertaining to weight values
+export function convertWeight(value, fromUnit, toUnit, shouldRound) {
     const inputValue = parseFloat(value);
     const from = checkAliases(fromUnit, weightAliases);
     const to = checkAliases(toUnit, weightAliases);
 
+
+    if (!inputValue && inputValue !== 0) {
+        console.error('Missing value to convert!')
+        throw new Error('Missing value to convert!')
+    };
+
     if (!from) {
-        console.log('Unit/Alias either to convert from not valid type or not currently supported!')
+        console.error('Unit/Alias either to convert from not valid type or not currently supported!')
         throw new Error('Unit/Alias to convert from either not valid type, or not currently supported!')
     };
     if (!to) {
-        console.log('Unit/Alias either to convert not to valid type or not currently supported!')
+        console.error('Unit/Alias either to convert not to valid type or not currently supported!')
         throw new Error('Unit/Alias to convert to either not valid type, Or not currently supported!')
     };
 
     if (from === "kilograms") {
         switch (to) {
             case "pounds":
-                return inputValue * 2.20462;
+                return shouldRound ? Math.round(inputValue * 2.20462) : inputValue * 2.20462;
             case "ounces":
-                return inputValue * 35.274;
+                return shouldRound ? Math.round(inputValue * 35.274) : inputValue * 35.274;
             case "grams":
-                return inputValue * 1000;
+                return shouldRound ? Math.round(inputValue * 1000) : inputValue * 1000;
             case "stones":
-                return inputValue * 0.157473;
+                return shouldRound ? Math.round(inputValue * 0.157473) : inputValue * 0.157473;
             default:
-                return inputValue;
+                return shouldRound ? Math.round(inputValue) : inputValue;
         }
     }
 
     if (from === "pounds") {
         switch (to) {
             case "kilograms":
-                return inputValue * (1 / 2.20462);
+                return shouldRound ? Math.round(inputValue * (1 / 2.20462)) : inputValue * (1 / 2.20462);
             case "ounces":
-                return inputValue * 16;
+                return shouldRound ? Math.round(inputValue * 16) : inputValue * 16;
             case "grams":
-                return inputValue * 453.592;
+                return shouldRound ? Math.round(inputValue * 453.592) : inputValue * 453.592;
             case "stones":
-                return inputValue * 0.0714286;
+                return shouldRound ? Math.round(inputValue * 0.0714286) : inputValue * 0.0714286;
             default:
-                return inputValue;
+                return shouldRound ? Math.round(inputValue) : inputValue;
         }
     }
 
     if (from === "ounces") {
         switch (to) {
             case "kilograms":
-                return inputValue * (1 / 35.274);
+                return shouldRound ? Math.round(inputValue * (1 / 35.274)) : inputValue * (1 / 35.274);
             case "pounds":
-                return inputValue * (1 / 16);
+                return shouldRound ? Math.round(inputValue * (1 / 16)) : inputValue * (1 / 16);
             case "grams":
-                return inputValue * 28.3495;
+                return shouldRound ? Math.round(inputValue * 28.3495) : inputValue * 28.3495;
             case "stones":
-                return inputValue * (1 / 16);
+                return shouldRound ? Math.round(inputValue * (1 / 16)) : inputValue * (1 / 16);
             default:
-                return inputValue;
+                return shouldRound ? Math.round(inputValue) : inputValue;
         }
     }
 
     if (from === "grams") {
         switch (to) {
             case "kilograms":
-                return inputValue * (1 / 1000);
+                return shouldRound ? Math.round(inputValue * (1 / 1000)) : inputValue * (1 / 1000);
             case "pounds":
-                return inputValue * (1 / 453.592);
+                return shouldRound ? Math.round(inputValue * (1 / 453.592)) : inputValue * (1 / 453.592);
             case "ounces":
-                return inputValue * (1 / 28.3495);
+                return shouldRound ? Math.round(inputValue * (1 / 28.3495)) : inputValue * (1 / 28.3495);
             case "stones":
-                return inputValue * (1 / 6350.293);
+                return shouldRound ? Math.round(inputValue * (1 / 6350.293)) : inputValue * (1 / 6350.293);
             default:
-                return inputValue;
+                return shouldRound ? Math.round(inputValue) : inputValue;
         }
     }
 
     if (from === "stones") {
         switch (to) {
             case "kilograms":
-                return inputValue * 6.35029;
+                return shouldRound ? Math.round(inputValue * 6.35029) : inputValue * 6.35029;
             case "pounds":
-                return inputValue * 14;
+                return shouldRound ? Math.round(inputValue * 14) : inputValue * 14;
             case "ounces":
-                return inputValue * 224;
+                return shouldRound ? Math.round(inputValue * 224) : inputValue * 224;
             case "grams":
-                return inputValue * 6350.293;
+                return shouldRound ? Math.round(inputValue * 6350.293) : inputValue * 6350.293;
             default:
-                return inputValue;
+                return shouldRound ? Math.round(inputValue) : inputValue;
         }
     }
 }
