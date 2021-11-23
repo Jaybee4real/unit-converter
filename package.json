@@ -1,6 +1,6 @@
 {
   "name": "@jaybee4real/unit-converter",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "The package converts units from the desired type to the specified type.",
   "scripts": {
     "test": "node example.js",

@@ -84,9 +84,8 @@ function convertLowerValue(value, unit) {
         case 'miles':
             return value * (1 / 0.000621371);
         case 'feet-inches':
-            let feet = Number(value.split(`'`)[0])
-            let inches = Number(value.split(`"`)[1])
-            let correctInches = (feet * 12) + inches
+            const [, feet, inches] = value.match(/(\d+)'\s*(\d+)(?:''|")/);
+            let correctInches = feet * 12 + +inches
             let correctValue = correctInches * (1 / 39.370079)
             return correctValue
         default:
@@ -112,10 +111,10 @@ function convertHigherValue(value, unit, shouldRound) {
         case 'miles':
             return value * 0.000621371;
         case 'feet-inches':
-            let inches = ((value * 0.393700787) * 100);
-            let feet = Math.floor(inches / 12);
-            inches %= 12;
-            return `${feet}' ${shouldRound ? Math.round(inches) : inches}"`
+            var realFeet = ((value*0.393700) / 12) * 100;
+            var feet = Math.floor(realFeet);
+            var inches = Math.round((realFeet - feet) * 12);
+            return `${feet}' ${inches}"`;
         default:
             return value;
     }

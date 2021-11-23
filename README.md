@@ -38,7 +38,7 @@ console.log(convertDistance(1, "km", "kilometers")); // 1
 
 // convert to and from feetInches (5' 3")
 
-console.log(convertDistance(100, "cm", "ftIn", "true")); // 3' 3"
-console.log(convertDistance(`3' 3"`, "ftIn", "cm", "true")); // 100
-console.log(convertDistance(`3' 3"`, "ftIn", "in", "true")); // 100
+cconsole.log(convertDistance(100, "cm", "ftIn", "true")) // 3' 3"
+console.log(convertDistance(`2' 12"`, "ftIn", "cm", true)) // 91
+console.log(convertDistance(91, "cm", "ftIn", "true")) // 2' 12"
 ```

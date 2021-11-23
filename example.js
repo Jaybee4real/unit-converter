@@ -1,4 +1,4 @@
-import { convertWeight, convertDistance } from './index.mjs'
+import { convertWeight, convertDistance } from './index.js'
 
 
 // TODO: write tests using jest
@@ -19,9 +19,10 @@ console.log(convertDistance(1, "km", "kilometers")) // 1
 // convert to and from feetInches (5' 3")
 
 console.log(convertDistance(100, "cm", "ftIn", "true")) // 3' 3"
-console.log(convertDistance(`3' 3"`, "ftIn", "cm", "true")) // 100
-console.log(convertDistance(`3' 3"`, "ftIn", "in", "true")) // 100
+console.log(convertDistance(`2' 12"`, "ftIn", "cm", true)) // 91
+console.log(convertDistance(91, "cm", "ftIn", "true")) // 2' 12"
 
 
-// use the shouldRound boolean as last argument
-console.log(convertWeight(1, "kg", "pounds", true)) // 2 instead of 2.20462
+// // use the shouldRound boolean as last argument
+// console.log(convertWeight(1, "kg", "pounds", true)) // 2 instead of 2.20462
+
