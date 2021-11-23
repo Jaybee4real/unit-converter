@@ -67,7 +67,7 @@ function checkAliases(unitName, aliasType) {
 
 
 // computation on first argument
-function convertLowerValue(value, unit, shouldRound) {
+function convertLowerValue(value, unit) {
     switch (unit) {
         case 'millimetres':
             return value * 0.001;
@@ -88,7 +88,7 @@ function convertLowerValue(value, unit, shouldRound) {
             let inches = Number(value.split(`"`)[1])
             let correctInches = (feet * 12) + inches
             let correctValue = correctInches * (1 / 39.370079)
-            return shouldRound ? Math.round(correctValue) : correctValue
+            return correctValue
         default:
             return value;
     }
@@ -144,7 +144,7 @@ export function convertDistance(value, fromUnit, toUnit, shouldRound) {
     };
 
     let computedValue = convertHigherValue(convertLowerValue(value, from, shouldRound), to, shouldRound)
-    if (shouldRound && from !== "feet-inches" && to !== "feet-inches") {
+    if (shouldRound && to !== "feet-inches") {
         // do not round feet inches because it returns a string instead of a number
         return Math.round(computedValue)
     } else return computedValue
